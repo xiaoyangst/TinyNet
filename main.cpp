@@ -1,10 +1,6 @@
 #include <iostream>
-
-int add(int a, int b) {
-    return a + b;
-}
-
+#include "base/Logger.h"
+using namespace xy;
 int main() {
-    std::cout << add(1, 2) << std::endl;
-    std::cout << "Hello World!" << std::endl;
+    LOG_INFO("test");
 }
