@@ -11,7 +11,6 @@
 #define TINYNET_BASE_TIMESTAMP_H_
 #include <iostream>
 #include <string>
-
 namespace xy {
 class Timestamp {
  public:
