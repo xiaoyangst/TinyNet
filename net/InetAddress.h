@@ -21,6 +21,7 @@ class InetAddress : public Copyable {
  public:
   InetAddress (const std::string &ip, uint16_t port);
   explicit InetAddress (const struct sockaddr_in &addr);
+  InetAddress() = default;
   std::string toIp () const;
   std::string toIpPort () const;
   uint16_t toPort () const;

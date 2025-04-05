@@ -1,5 +1,5 @@
 #include "Channel.h"
-
+#include "EventLoop.h"
 namespace xy {
 const int Channel::kNoneEvent = 0;
 const int Channel::kReadEvent = EPOLLIN | EPOLLPRI;
@@ -15,6 +15,7 @@ Channel::Channel(EventLoop *loop, int fd)
 }
 
 Channel::~Channel() {
+
 }
 
 int

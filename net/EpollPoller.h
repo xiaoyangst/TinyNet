@@ -10,13 +10,13 @@
 #ifndef TINYNET_NET_EPOLLPOLLER_H_
 #define TINYNET_NET_EPOLLPOLLER_H_
 #include <unistd.h>
-#include <string.h>
+#include <cstring>
 #include "Poller.h"
 namespace xy {
 
 class EpollPoller : public Poller {
  public:
-  EpollPoller(EventLoop *loop);
+  explicit EpollPoller(EventLoop *loop);
   ~EpollPoller() override;
   Timestamp poll(int timeoutMs, ChannelVec *activeChannels) override; // epoll_wait
   void updateChannel(Channel *channel) override;	// epoll_ctl--> MOD ADD DEL

@@ -1,5 +1,5 @@
 #include "EpollPoller.h"
-#include "base/Logger.h"
+#include "base/Log.h"
 namespace xy {
 const int kNew = -1;	// 未添加
 const int kAdded = 1;	// 已添加

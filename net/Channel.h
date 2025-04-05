@@ -15,68 +15,45 @@
 #include <memory>
 #include "base/Noncopyable.h"
 #include "base/Timestamp.h"
-#include "EventLoop.h"
 namespace xy {
+class EventLoop;
 class Channel : public Noncopyable {
  public:
   using EventCallback = std::function<void()>;
   using ReadEventCallback = std::function<void(Timestamp)>;
   Channel(EventLoop *loop, int fd);
   ~Channel();
-  EventLoop *
-  ownerLoop();
-  int
-  fd() const;
-  int
-  events() const;
-  void
-  set_revents(int revt);
+  EventLoop *ownerLoop();
+  int fd() const;
+  int events() const;
+  void set_revents(int revt);
   // 开启或关闭读写
-  void
-  enableReading();
-  void
-  disableReading();
-  void
-  enableWriting();
-  void
-  disableWriting();
-  void
-  disableAll();
-  bool
-  isNoneEvent() const;
-  bool
-  isWriting() const;
-  bool
-  isReading() const;
-  void
-  remove();    // 从 loop 中移除 Channel
+  void enableReading();
+  void disableReading();
+  void enableWriting();
+  void disableWriting();
+  void disableAll();
+  bool isNoneEvent() const;
+  bool isWriting() const;
+  bool isReading() const;
+  void remove();    // 从 loop 中移除 Channel
   // 设置事件回调
-  void
-  setReadCallback(ReadEventCallback cb);
-  void
-  setWriteCallback(EventCallback cb);
-  void
-  setCloseCallback(EventCallback cb);
-  void
-  setErrorCallback(EventCallback cb);
+  void setReadCallback(ReadEventCallback cb);
+  void setWriteCallback(EventCallback cb);
+  void setCloseCallback(EventCallback cb);
+  void setErrorCallback(EventCallback cb);
 
   // 执行 Channel 的事件回调函数（很关键的一个函数）
-  void
-  handleEvent(Timestamp receiveTime);
+  void handleEvent(Timestamp receiveTime);
 
   // 防止手动 remove Channel 之后，其他线程还在使用 Channel 执行回调
-  void
-  tie(const std::shared_ptr<void> &);
+  void tie(const std::shared_ptr<void> &);
 
-  int
-  index() const;
-  void
-  set_index(int idx);
+  int index() const;
+  void set_index(int idx);
  private:
-  void
-  update();
-  void
-  handleEventWithGuard(Timestamp receiveTime);
+  void update();
+  void handleEventWithGuard(Timestamp receiveTime);
  private:
 
   // 表示当前 fd 的状态

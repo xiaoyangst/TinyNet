@@ -1,76 +1,52 @@
-#ifndef TINYNET_BASE_LOGGER_H_
-#define TINYNET_BASE_LOGGER_H_
+/**
+  ******************************************************************************
+  * @file           : Logger.h
+  * @author         : xy
+  * @brief          : 异步日志
+  * @attention      : None
+  * @date           : 2025/3/18
+  ******************************************************************************
+  */
 
-#include <string>
-#include "Noncopyable.h"
+#ifndef TINYRPC_SRC_UTILS_LOGGER_H_
+#define TINYRPC_SRC_UTILS_LOGGER_H_
+
+#include <atomic>
+#include <thread>
+#include <fstream>
+#include "SafeQueue.h"
 
 namespace xy {
-#define LOG_INFO(logmsgFormat, ...) \
-    do \
-    { \
-        Logger &logger = Logger::instance(); \
-        logger.setLogLevel(INFO); \
-        char buf[1024] = {0}; \
-        snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-        logger.log(buf); \
-    } while(0)
-
-#define LOG_ERROR(logmsgFormat, ...) \
-    do \
-    { \
-        Logger &logger = Logger::instance(); \
-        logger.setLogLevel(ERROR); \
-        char buf[1024] = {0}; \
-        snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-        logger.log(buf); \
-    } while(0)
-
-#define LOG_FATAL(logmsgFormat, ...) \
-    do \
-    { \
-        Logger &logger = Logger::instance(); \
-        logger.setLogLevel(FATAL); \
-        char buf[1024] = {0}; \
-        snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-        logger.log(buf); \
-        exit(-1); \
-    } while(0)
-
-#ifdef MUDEBUG
-#define LOG_DEBUG(logmsgFormat, ...) \
-    do \
-    { \
-        Logger &logger = Logger::instance(); \
-        logger.setLogLevel(DEBUG); \
-        char buf[1024] = {0}; \
-        snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-        logger.log(buf); \
-    } while(0)
-#else
-#define LOG_DEBUG(logmsgFormat, ...)
-#endif
-
-// 定义日志的级别  INFO  ERROR  FATAL  DEBUG
-enum LogLevel
-{
-  INFO,  // 普通信息
-  ERROR, // 错误信息
-  FATAL, // core信息
-  DEBUG, // 调试信息
+enum class LOGLEVEL {
+  INFO,
+  DEBUG,
+  ERROR,
+  FATAL
 };
 
-// 输出一个日志类
-class Logger : public Noncopyable
-{
+class Logger {
  public:
-  // 获取日志唯一的实例对象
-  static Logger& instance();
-  // 设置日志级别
-  void setLogLevel(int level);
-  // 写日志
-  void log(std::string msg);
+  static Logger *getInstance();
+  Logger();
+  ~Logger();
+  void Log(const std::string &log);
+ public:
+  void setLevel(LOGLEVEL level) { log_level_ = level; };
+
+  LOGLEVEL level() { return log_level_; };
  private:
-  int logLevel_;
+  static std::string getCurTime();
+  void writeLog();
+  static void destroy();
+ private:
+  static Logger *instance_;
+  SafeQueue<std::string> queue_;
+  std::thread work_thread_;
+  std::ofstream log_file_;
+  std::atomic<bool> is_exit_ = false;
+  LOGLEVEL log_level_ = LOGLEVEL::INFO;
 };
+
 }
-#endif //TINYNET_BASE_LOGGER_H_
+
+#endif //TINYRPC_SRC_UTILS_LOGGER_H_
