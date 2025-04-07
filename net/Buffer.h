@@ -71,6 +71,7 @@ class Buffer {
   }
 
   ssize_t readFd(int fd, int* savedErrno);
+  ssize_t writeFd(int fd,int* saveErrno);
 
  private:
   void makeSpace(int len){

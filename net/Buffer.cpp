@@ -11,6 +11,7 @@
 #include "Buffer.h"
 #include <errno.h>
 #include <sys/uio.h>
+#include <execution>
 namespace xy {
 
 ssize_t Buffer::readFd(int fd, int *savedErrno) {
@@ -31,10 +32,18 @@ ssize_t Buffer::readFd(int fd, int *savedErrno) {
 	{
 		writerIndex_ += n;
 	}
-	else	// // 从 fd 读取到的数据长度 ，Buffer的可写区域不够，将 extrabuf 临时存储的数据写入到 Buffer 中，append 会自动考虑扩容
+	else	// 从 fd 读取到的数据长度 ，Buffer的可写区域不够，将 extrabuf 临时存储的数据写入到 Buffer 中，append 会自动考虑扩容
 	{
 		writerIndex_ = buffer_.size();
 		append(extrabuf, n - writable);
+	}
+	return n;
+}
+
+ssize_t Buffer::writeFd(int fd, int *saveErrno) {
+	ssize_t  n = ::write(fd,peek(),readableBytes());
+	if (n < 0){
+		*saveErrno = errno;
 	}
 	return n;
 }

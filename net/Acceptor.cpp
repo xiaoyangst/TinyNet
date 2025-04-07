@@ -22,7 +22,7 @@ static int createNonblockingOrDie() {
 }
 
 Acceptor::Acceptor(xy::EventLoop *loop, const xy::InetAddress &listenAddr, bool reuseport)
-	: loop_(loop), acceptSocket_(createNonblockingOrDie()), listening_(false) {
+	: loop_(loop), acceptSocket_(createNonblockingOrDie()), acceptChannel_(loop,acceptSocket_.fd()), listening_(false) {
 	acceptSocket_.setReuseAddr(true);
 	acceptSocket_.setReusePort(reuseport);
 	acceptSocket_.bindAddress(listenAddr);
