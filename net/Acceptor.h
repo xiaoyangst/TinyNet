@@ -22,7 +22,7 @@ class Acceptor {
   Acceptor(EventLoop *loop, const InetAddress &listenAddr, bool reuseport);
   ~Acceptor();
 
-  void serNewConnectionCallback(const NewConnectionCallback &cb);
+  void setNewConnectionCallback(const NewConnectionCallback &cb);
 
   bool listening() const;
 

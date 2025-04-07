@@ -12,7 +12,7 @@
 
 namespace xy {
 
-TcpConnection::TcpConnection(EventLoop *loop,
+TcpConnection::TcpConnection(EventLoop* loop,
 							 const std::string &name,
 							 int sockfd,
 							 const InetAddress &localAddr,

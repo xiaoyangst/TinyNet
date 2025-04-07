@@ -10,10 +10,12 @@
 
 #include "EventLoopThread.h"
 
+#include <utility>
+
 namespace xy {
 
 EventLoopThread::EventLoopThread(xy::EventLoopThread::Callback cb, const std::string &name)
-	: cb_(cb)
+	: cb_(std::move(cb))
 	  , name_(name)
 	  , loop_(new EventLoop)
 	  , thread_(std::bind(&EventLoopThread::startLoop, this), name) {

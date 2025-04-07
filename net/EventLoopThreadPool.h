@@ -15,22 +15,25 @@
 
 namespace xy {
 class EventLoopThreadPool {
+  using ThreadInitCallback = std::function<void(EventLoop*)>;
  public:
-  using LoopPtr = std::shared_ptr<EventLoop>;
-  using LoopThreadPtr = std::shared_ptr<EventLoopThread>;
- public:
-  explicit EventLoopThreadPool(EventLoop *baseLoop, int numThreads);
+  explicit EventLoopThreadPool(EventLoop *baseLoop, int numThreads = std::thread::hardware_concurrency());
   ~EventLoopThreadPool();
   void start(); // 启动线程池
-  LoopPtr getNextLoop(); // 获取下一个 EventLoop
-  LoopPtr getLoop(int index); // 获取指定索引的 EventLoop
+  EventLoop *getNextLoop(); // 获取下一个 EventLoop
+  EventLoop *getLoop(int index); // 获取指定索引的 EventLoop
   int getNumThreads() const; // 获取线程数量
+
+  void setThreadNum(int numThreads) {
+	  numThreads_ = numThreads;
+  }
+
  private:
   EventLoop *mainLoop_; // 主事件循环
   int numThreads_; // 线程数量
   size_t next_ = 0; // 下一个事件循环索引
-  std::vector<LoopPtr> loops_;
-  std::vector<LoopThreadPtr> threads_; // 线程池
+  std::vector<EventLoop> loops_;
+  std::vector<EventLoopThread> threads_; // 线程池
 };
 }
 

@@ -24,7 +24,7 @@ namespace xy {
 class TcpConnection : public Noncopyable,std::enable_shared_from_this<TcpConnection>{
   enum StateE { kDisconnected, kConnecting, kConnected, kDisconnecting };
  public:
-  TcpConnection(EventLoop *loop,
+  TcpConnection(EventLoop* loop,
 				const std::string &name,
 				int sockfd,
 				const InetAddress &localAddr,

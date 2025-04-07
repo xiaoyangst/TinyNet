@@ -31,7 +31,7 @@ Acceptor::Acceptor(xy::EventLoop *loop, const xy::InetAddress &listenAddr, bool 
 	);
 }
 
-void Acceptor::serNewConnectionCallback(const xy::Acceptor::NewConnectionCallback &cb) {
+void Acceptor::setNewConnectionCallback(const xy::Acceptor::NewConnectionCallback &cb) {
 	newConnectionCallback_ = cb;
 }
 
